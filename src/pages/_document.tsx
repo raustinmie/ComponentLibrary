@@ -1,6 +1,6 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 import Script from 'next/script';
-
+import { ogIconPath, ogImagePath, appleTouchIconPath, companyName, companyUrl, siteDescription } from '../constants';
 class MyDocument extends Document {
        getInstaFeed = () =>{
           var i,e,d=document,s="script";i=d.createElement("script");i.async=true;i.charset="UTF-8";
@@ -18,29 +18,29 @@ class MyDocument extends Document {
 
           {/* Icons & Manifest */}
           <link rel="icon" href="/favicon.ico" />
-          <link rel="apple-touch-icon" href="/images/logo-dark.png" />
-          <link rel="canonical" href="https://harborviewwebdesign.com/" />
+          <link rel="apple-touch-icon" href={appleTouchIconPath} />
+          <link rel="canonical" href="https://halfmoonsfarm.com/" />
           <link rel="manifest" href="/manifest.json" />
 
           {/* Meta Tags */}
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <meta name="theme-color" content="#000000" />
           <meta name="robots" content="index, follow" />
-          <meta name="description" content="Website design and construction in Whatcom County for small businesses with SEO, hosting, and maintenance." />
+          <meta name="description" content={siteDescription} />
 
           {/* Open Graph */}
-          <meta property="og:title" content="Harborview Web Design" />
-          <meta property="og:description" content="Website design and construction for small businesses" />
-          <meta property="og:image" content="https://harborviewwebdesign.com/WLC-246.jpg" />
-          <meta property="og:url" content="https://harborviewwebdesign.com" />
+          <meta property="og:title" content={companyName} />
+          <meta property="og:description" content={siteDescription} />
+          <meta property="og:image" content={ogImagePath} />
+          <meta property="og:url" content={companyUrl} />
           <meta property="og:type" content="website" />
           <meta property="og:image:type" content="image/jpeg" />
 
           {/* Twitter Meta */}
           <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content="Harborview Web Design" />
-          <meta name="twitter:description" content="Website design and construction for small businesses" />
-          <meta name="twitter:image" content="https://harborviewwebdesign.com/WLC-246.jpg" />
+          <meta name="twitter:title" content={companyName} />
+          <meta name="twitter:description" content={siteDescription}/>
+          <meta name="twitter:image" content={ogImagePath} />
 
           {/* Structured Data (JSON-LD) */}
           <Script
@@ -51,14 +51,13 @@ class MyDocument extends Document {
               __html: JSON.stringify({
                 "@context": "https://schema.org",
                 "@type": "ProfessionalService",
-                name: "Harborview Web Design",
-                url: "https://harborviewwebdesign.com",
-                image: "https://harborviewwebdesign.com/logo-dark.png",
-                description:
-                  "Website design and construction for small businesses with SEO, hosting, and maintenance.",
+                name: { companyName },
+                url: { companyUrl },
+                image: { ogIconPath },
+                description: { siteDescription },
                 sameAs: [
-                  "https://www.facebook.com/harborviewwebdesign",
-                  "https://www.instagram.com/harborviewwebdesign",
+                  "https://www.facebook.com/halfmoonsfarm",
+                  "https://www.instagram.com/halfmoonsfarm",
                 ],
               }),
             }}

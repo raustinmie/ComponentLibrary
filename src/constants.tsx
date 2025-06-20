@@ -1,20 +1,29 @@
-const aboutUs_OurTeam = "Hi, we’re Austin and Sara Miedema! We’re the husband-and-wife team behind Harborview Web Design. We started this business to combine our strengths and we love working on something both creative and meaningful together. We live in a coastal town in Northwest Washington, just a few blocks from the harbor, with our four kids (ages 6–12). Family is at the heart of everything we do. When we’re not working, we’re probably playing board games, camping, or enjoying the outdoors together.";
-export { aboutUs_OurTeam };
+const appleTouchIconPath = "";
+export { appleTouchIconPath };
 
-const aboutUs_OurMission = "To create clean, custom websites that reflect the heart of your business - without the stress. We’re here to make getting online simple, personal, and enjoyable.";
-export { aboutUs_OurMission };
+const siteDescription = "Sweet Pea Seeds, Subscription Bouquets, and Cut Flower Farm in Ferndale, Whatcom County.";
+export { siteDescription };
 
-const aboutUs_OurValues = "We believe in clear communication, honest work, and treating every client like a partner. Integrity, creativity, and care are at the core of everything we do.";
-export { aboutUs_OurValues };
+const ogImagePath = "/images/og-image.jpg";
+export { ogImagePath };
 
-const companyName = "Harborview Web Design";
+const ogIconPath = "/images/og-icon.png";
+export { ogIconPath };
+
+const companyName = "Half Moon's Farm";
 export { companyName };
 
-const companyUrl = "https://harborviewwebdesign.com";
+const companyUrl = "https://halfmoonsfarm.com";
 export { companyUrl };
 
-const primaryEmail = "info@harborviewwebdesign.com";
+const primaryEmail = "info@halfmoonsfarm.com";
 export { primaryEmail };
 
 const primaryPhone = "360-685-3829";
 export { primaryPhone };
+
+const facebookUrl = "https://www.facebook.com/profile.php?id=61553231950832";
+export { facebookUrl };
+
+const instagramUrl = "https://www.instagram.com/halfmoonsfarm";
+export { instagramUrl };

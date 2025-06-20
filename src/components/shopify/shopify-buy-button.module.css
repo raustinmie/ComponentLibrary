@@ -1,0 +1,14 @@
+.buyButtonContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--color-cta);
+    color: var(--color-text-dark);
+    padding: 1.25rem 3rem;
+    border-radius: var(--corner-radius);
+    color: var(--color-text-light);
+}
+
+.buyButton {
+    text-decoration: none;
+}
