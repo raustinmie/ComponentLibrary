@@ -1,7 +1,8 @@
 const appleTouchIconPath = "";
 export { appleTouchIconPath };
 
-const siteDescription = "Sweet Pea Seeds, Subscription Bouquets, and Cut Flower Farm in Ferndale, Whatcom County.";
+const siteDescription =
+	"Sweet Pea Seeds, Subscription Bouquets, and Cut Flower Farm in Ferndale, Whatcom County.";
 export { siteDescription };
 
 const ogImagePath = "/images/og-image.jpg";
@@ -13,8 +14,8 @@ export { ogIconPath };
 const companyName = "Half Moon's Farm";
 export { companyName };
 
-const companyUrl = "https://halfmoonsfarm.com";
-export { companyUrl };
+const canonicalUrl = "https://halfmoonsfarm.com";
+export { canonicalUrl };
 
 const primaryEmail = "info@halfmoonsfarm.com";
 export { primaryEmail };
