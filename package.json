@@ -1,11 +1,15 @@
 {
-	"name": "component-library",
+	"name": "@raustinmie/component-library",
 	"version": "0.1.0",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
+	"private": false,
 	"scripts": {
 		"build": "tsc"
 	},
+	"files": [
+		"dist"
+	],
 	"peerDependencies": {
 		"react": "^18 || ^19",
 		"react-dom": "^18 || ^19"

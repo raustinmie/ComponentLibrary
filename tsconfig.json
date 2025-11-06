@@ -6,14 +6,14 @@
 		"moduleResolution": "bundler",
 		"allowSyntheticDefaultImports": true,
 		"declaration": true,
+		"declarationDir": "dist",
 		"outDir": "dist",
 		"jsx": "react-jsx",
 		"esModuleInterop": true,
 		"skipLibCheck": true,
 		"strict": true,
-		"types": ["node", "react"],
 		"rootDir": "src",
-		"declarationDir": "dist"
+		"types": ["node", "react"]
 	},
 	"include": ["src"]
 }
