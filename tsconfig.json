@@ -11,7 +11,9 @@
 		"esModuleInterop": true,
 		"skipLibCheck": true,
 		"strict": true,
-		"types": ["node", "react"]
+		"types": ["node", "react"],
+		"rootDir": "src",
+		"declarationDir": "dist"
 	},
 	"include": ["src"]
 }
