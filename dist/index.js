@@ -1,2 +1,1 @@
-import ContactForm from "./contact-form";
-export { ContactForm };
+export { default as ContactForm } from "./contact-form";
