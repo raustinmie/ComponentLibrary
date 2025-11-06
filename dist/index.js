@@ -1,2 +1,2 @@
-import ContactForm from "./components/ContactForm";
+import ContactForm from "./components/ContactForm/contact-form";
 export { ContactForm };
