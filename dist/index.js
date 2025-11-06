@@ -1,1 +1,2 @@
-export { default as ContactForm } from "./contact-form";
+import ContactForm from "./components/ContactForm";
+export { ContactForm };
