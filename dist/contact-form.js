@@ -1,7 +1,8 @@
+"use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useState } from "react";
 import emailjs from "@emailjs/browser";
-export default function ContactForm() {
+export default function ContactForm({ showToast = false, submitText = "Submit", }) {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -65,5 +66,6 @@ export default function ContactForm() {
         })
             .finally(() => setIsSubmitting(false));
     };
-    return (_jsxs("form", { className: "cs-form", onSubmit: handleSubmit, children: [_jsxs("label", { className: "cs-label", children: ["Name", _jsx("input", { className: "cs-input cs-name", type: "text", name: "name", placeholder: "Name", value: formData.name, onChange: handleChange, required: true })] }), _jsxs("label", { className: "cs-label cs-email", children: ["Email", _jsx("input", { className: "cs-input", type: "email", name: "email", placeholder: "Email", value: formData.email, onChange: handleChange, required: true })] }), _jsxs("label", { className: "cs-label cs-phone", children: ["Phone", _jsx("input", { className: "cs-input", type: "tel", name: "phone", placeholder: "Phone", value: formData.phone, onChange: handleChange, required: true })] }), _jsxs("label", { className: "cs-label", children: ["Message", _jsx("textarea", { className: "cs-input cs-textarea", name: "message", placeholder: "Write message...", value: formData.message, onChange: handleChange, required: true, maxLength: 2000 })] }), _jsx("input", { type: "text", name: "website", tabIndex: -1, autoComplete: "off", value: formData.website, onChange: handleChange, style: { display: "none" } }), _jsx("button", { className: "cs-button-solid cs-submit", type: "submit", disabled: isSubmitting, children: isSubmitting ? "Submitting..." : "Submit" }), toast.show && _jsx("div", { className: "toast", children: toast.message })] }));
+    return (_jsxs("form", { className: "cs-form", onSubmit: handleSubmit, children: [_jsxs("label", { className: "cs-label", children: ["Name", _jsx("input", { className: "cs-input cs-name", type: "text", name: "name", placeholder: "Name", value: formData.name, onChange: handleChange, required: true })] }), _jsxs("label", { className: "cs-label cs-email", children: ["Email", _jsx("input", { className: "cs-input", type: "email", name: "email", placeholder: "Email", value: formData.email, onChange: handleChange, required: true })] }), _jsxs("label", { className: "cs-label cs-phone", children: ["Phone", _jsx("input", { className: "cs-input", type: "tel", name: "phone", placeholder: "Phone", value: formData.phone, onChange: handleChange, required: true })] }), _jsxs("label", { className: "cs-label", children: ["Message", _jsx("textarea", { className: "cs-input cs-textarea", name: "message", placeholder: "Write message...", value: formData.message, onChange: handleChange, required: true, maxLength: 2000 })] }), _jsx("input", { type: "text", name: "website", tabIndex: -1, autoComplete: "off", value: formData.website, onChange: handleChange, style: { display: "none" } }), _jsx("button", { className: "cs-button-solid cs-submit", type: "submit", disabled: isSubmitting, children: isSubmitting ? "Submitting..." : submitText }), toast.show ||
+                (showToast && _jsx("div", { className: "toast", children: toast.message }))] }));
 }
