@@ -5,6 +5,7 @@ import emailjs from "@emailjs/browser";
 export interface ContactFormProps {
 	showToast?: boolean;
 	submitText?: string;
+	toastMessage?: string;
 }
 
 export type FormData = {
@@ -18,6 +19,7 @@ export type FormData = {
 export default function ContactForm({
 	showToast = false,
 	submitText = "Submit",
+	toastMessage = "Thanks for reaching out!",
 }: ContactFormProps) {
 	const [formData, setFormData] = useState<FormData>({
 		name: "",
@@ -29,9 +31,8 @@ export default function ContactForm({
 	const maxMessageLength = 2000;
 	const toastDuration = 5000;
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [toast, setToast] = useState<{ show: boolean; message: string }>({
+	const [toast, setToast] = useState<{ show: boolean }>({
 		show: false,
-		message: "",
 	});
 	const [startTime, setStartTime] = useState<number>(0);
 
@@ -74,7 +75,7 @@ export default function ContactForm({
 		};
 
 		setIsSubmitting(true);
-		setToast({ show: false, message: "" });
+		setToast({ show: false });
 
 		emailjs
 			.send(
@@ -84,7 +85,7 @@ export default function ContactForm({
 				process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
 			)
 			.then(() => {
-				setToast({ show: true, message: "Thanks for reaching out!" });
+				setToast({ show: true });
 				setFormData({
 					name: "",
 					email: "",
@@ -93,12 +94,12 @@ export default function ContactForm({
 					website: "",
 				});
 				setStartTime(Date.now());
-				setTimeout(() => setToast({ show: false, message: "" }), toastDuration);
+				setTimeout(() => setToast({ show: false }), toastDuration);
 			})
 			.catch((error) => {
 				console.error("EmailJS error:", error);
-				setToast({ show: true, message: "Error sending message, try again!" });
-				setTimeout(() => setToast({ show: false, message: "" }), toastDuration);
+				setToast({ show: true });
+				setTimeout(() => setToast({ show: false }), toastDuration);
 			})
 			.finally(() => setIsSubmitting(false));
 	};
@@ -170,9 +171,7 @@ export default function ContactForm({
 			>
 				{isSubmitting ? "Submitting..." : submitText}
 			</button>
-			{(toast.show || showToast) && (
-				<div className="toast">{toast.message}</div>
-			)}
+			{(toast.show || showToast) && <div className="toast">{toastMessage}</div>}
 		</form>
 	);
 }

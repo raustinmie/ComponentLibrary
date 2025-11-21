@@ -1,6 +1,7 @@
 export interface ContactFormProps {
     showToast?: boolean;
     submitText?: string;
+    toastMessage?: string;
 }
 export type FormData = {
     name: string;
@@ -9,4 +10,4 @@ export type FormData = {
     message: string;
     website: string;
 };
-export default function ContactForm({ showToast, submitText, }: ContactFormProps): import("react/jsx-runtime").JSX.Element;
+export default function ContactForm({ showToast, submitText, toastMessage, }: ContactFormProps): import("react/jsx-runtime").JSX.Element;
