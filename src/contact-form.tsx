@@ -170,8 +170,9 @@ export default function ContactForm({
 			>
 				{isSubmitting ? "Submitting..." : submitText}
 			</button>
-			{toast.show ||
-				(showToast && <div className="toast">{toast.message}</div>)}
+			{(toast.show || showToast) && (
+				<div className="toast">{toast.message}</div>
+			)}
 		</form>
 	);
 }
