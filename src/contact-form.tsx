@@ -2,6 +2,11 @@
 import { useEffect, useState, ChangeEvent, FormEvent } from "react";
 import emailjs from "@emailjs/browser";
 
+export interface ContactFormProps {
+	showToast?: boolean;
+	submitText?: string;
+}
+
 export type FormData = {
 	name: string;
 	email: string;
@@ -10,7 +15,10 @@ export type FormData = {
 	website: string;
 };
 
-export default function ContactForm() {
+export default function ContactForm({
+	showToast = false,
+	submitText = "Submit",
+}: ContactFormProps) {
 	const [formData, setFormData] = useState<FormData>({
 		name: "",
 		email: "",
@@ -160,9 +168,10 @@ export default function ContactForm() {
 				type="submit"
 				disabled={isSubmitting}
 			>
-				{isSubmitting ? "Submitting..." : "Submit"}
+				{isSubmitting ? "Submitting..." : submitText}
 			</button>
-			{toast.show && <div className="toast">{toast.message}</div>}
+			{toast.show ||
+				(showToast && <div className="toast">{toast.message}</div>)}
 		</form>
 	);
 }
