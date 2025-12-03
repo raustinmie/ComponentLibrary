@@ -1,8 +1,31 @@
 "use client";
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { useEffect, useState, useRef, } from "react";
+import { useEffect, useState, useRef } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
-export default function ContactFormV2({ showToast = false, submitText = "Submit", toastMessage = "Thanks for reaching out!", useCaptcha = false, captchaSiteKey, onSubmit, }) {
+const submitContactData = (apiPath, payload) => {
+    return fetch(apiPath, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+    }).then(async (response) => {
+        if (response.ok)
+            return;
+        let errorMessage = "Failed to send message.";
+        try {
+            const data = await response.json();
+            if (data && typeof data.error === "string") {
+                errorMessage = data.error;
+            }
+        }
+        catch (_a) {
+            // Ignore JSON parsing errors and fall back to the generic message.
+        }
+        throw new Error(errorMessage);
+    });
+};
+export default function ContactFormV2({ showToast = false, submitText = "Submit", toastMessage = "Thanks for reaching out!", useCaptcha = false, captchaSiteKey, toEmail, apiPath = "/api/contact", smtpHost, smtpPort, smtpUser, smtpPass, smtpSecure, }) {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -23,6 +46,9 @@ export default function ContactFormV2({ showToast = false, submitText = "Submit"
     const [submissionError, setSubmissionError] = useState(null);
     useEffect(() => {
         setStartTime(Date.now());
+        if (!smtpHost || !smtpUser || !smtpPass) {
+            console.warn("ContactFormV2 is missing SMTP configuration props.");
+        }
     }, []);
     useEffect(() => {
         if (useCaptcha && !captchaSiteKey) {
@@ -58,18 +84,19 @@ export default function ContactFormV2({ showToast = false, submitText = "Submit"
             ? formData.message.slice(0, maxMessageLength) +
                 "\n\n[Message truncated]"
             : formData.message;
-        const submissionData = Object.assign(Object.assign({}, formData), { message: safeMessage + `\n\nFrom: ${formData.email}`, captchaToken: useCaptcha ? captchaToken : undefined });
+        const submissionData = Object.assign(Object.assign({}, formData), { message: safeMessage + `\n\nFrom: ${formData.email}`, toEmail,
+            smtpHost,
+            smtpPort,
+            smtpUser,
+            smtpPass,
+            smtpSecure, captchaToken: useCaptcha ? captchaToken : undefined });
         if (!captchaSiteKey && useCaptcha) {
             console.warn("Captcha is enabled but no site key provided.");
-        }
-        if (!onSubmit) {
-            console.warn("ContactFormV2 requires an onSubmit handler when not using EmailJS.");
-            return;
         }
         setIsSubmitting(true);
         setToast({ show: false });
         setSubmissionError(null);
-        Promise.resolve(onSubmit(submissionData))
+        submitContactData(apiPath, submissionData)
             .then(() => {
             var _a;
             setToast({ show: true });
@@ -90,7 +117,10 @@ export default function ContactFormV2({ showToast = false, submitText = "Submit"
         })
             .catch((error) => {
             console.error("ContactFormV2 submission error:", error);
-            setSubmissionError("Something went wrong. Please try again.");
+            const message = error instanceof Error && error.message
+                ? error.message
+                : "Something went wrong. Please try again.";
+            setSubmissionError(message);
             setToast({ show: true });
             setTimeout(() => setToast({ show: false }), toastDuration);
         })
@@ -98,5 +128,5 @@ export default function ContactFormV2({ showToast = false, submitText = "Submit"
     };
     return (_jsxs("form", { className: "cs-form", onSubmit: handleSubmit, children: [_jsxs("label", { className: "cs-label", children: ["Name", _jsx("input", { className: "cs-input cs-name", type: "text", name: "name", placeholder: "Name", value: formData.name, onChange: handleChange, required: true })] }), _jsxs("label", { className: "cs-label cs-email", children: ["Email", _jsx("input", { className: "cs-input", type: "email", name: "email", placeholder: "Email", value: formData.email, onChange: handleChange, required: true })] }), _jsxs("label", { className: "cs-label cs-phone", children: ["Phone", _jsx("input", { className: "cs-input", type: "tel", name: "phone", placeholder: "Phone", value: formData.phone, onChange: handleChange, required: true })] }), _jsxs("label", { className: "cs-label", children: ["Message", _jsx("textarea", { className: "cs-input cs-textarea", name: "message", placeholder: "Write message...", value: formData.message, onChange: handleChange, required: true, maxLength: 2000 })] }), _jsx("input", { type: "text", name: "website", tabIndex: -1, autoComplete: "off", value: formData.website, onChange: handleChange, style: { display: "none" } }), useCaptcha && captchaSiteKey && (_jsxs("div", { className: "cs-captcha", children: [_jsx(ReCAPTCHA, { sitekey: captchaSiteKey, onChange: handleCaptchaChange, ref: (instance) => {
                             captchaRef.current = instance;
-                        } }), captchaError && (_jsx("p", { className: "cs-captcha-error", children: captchaError }))] })), submissionError && (_jsx("p", { className: "cs-error", children: submissionError })), _jsx("button", { className: "cs-button-solid cs-submit", type: "submit", disabled: isSubmitting || (useCaptcha && (!captchaToken || !captchaSiteKey)), children: isSubmitting ? "Submitting..." : submitText }), (toast.show || showToast) && _jsx("div", { className: "toast", children: toastMessage })] }));
+                        } }), captchaError && _jsx("p", { className: "cs-captcha-error", children: captchaError })] })), submissionError && _jsx("p", { className: "cs-error", children: submissionError }), _jsx("button", { className: "cs-button-solid cs-submit", type: "submit", disabled: isSubmitting || (useCaptcha && (!captchaToken || !captchaSiteKey)), children: isSubmitting ? "Submitting..." : submitText }), (toast.show || showToast) && _jsx("div", { className: "toast", children: toastMessage })] }));
 }

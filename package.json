@@ -15,12 +15,16 @@
 		"react-dom": "^18 || ^19"
 	},
 	"dependencies": {
-		"@emailjs/browser": "^4.4.1"
+		"@emailjs/browser": "^4.4.1",
+		"nodemailer": "^7.0.11",
+		"react-google-recaptcha": "^3.1.0"
 	},
 	"devDependencies": {
 		"@types/node": "^24.10.0",
+		"@types/nodemailer": "^7.0.4",
 		"@types/react": "^19.2.2",
 		"@types/react-dom": "^19.2.2",
+		"@types/react-google-recaptcha": "^2.1.9",
 		"typescript": "^5.0.0"
 	}
 }

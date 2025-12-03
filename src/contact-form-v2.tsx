@@ -1,23 +1,57 @@
 "use client";
-import {
-	useEffect,
-	useState,
-	useRef,
-	ChangeEvent,
-	FormEvent,
-} from "react";
+import { useEffect, useState, useRef, ChangeEvent, FormEvent } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import type { ContactFormProps, FormData } from "./contact-form";
 
 export interface ContactFormV2Props extends ContactFormProps {
 	useCaptcha?: boolean;
 	captchaSiteKey?: string;
-	onSubmit?: (data: ContactFormV2Submission) => Promise<void> | void;
+	toEmail: string;
+	apiPath?: string;
+	smtpHost: string;
+	smtpPort: number | string;
+	smtpUser: string;
+	smtpPass: string;
+	smtpSecure?: boolean;
 }
 
-export type ContactFormV2Submission = FormData & {
+export type ContactFormV2Submission = Omit<FormData, "message"> & {
 	message: string;
+	toEmail: string;
+	smtpHost: string;
+	smtpPort: number | string;
+	smtpUser: string;
+	smtpPass: string;
+	smtpSecure?: boolean;
 	captchaToken?: string | null;
+};
+
+const submitContactData = (
+	apiPath: string,
+	payload: ContactFormV2Submission
+) => {
+	return fetch(apiPath, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(payload),
+	}).then(async (response) => {
+		if (response.ok) return;
+
+		let errorMessage = "Failed to send message.";
+
+		try {
+			const data = await response.json();
+			if (data && typeof data.error === "string") {
+				errorMessage = data.error;
+			}
+		} catch {
+			// Ignore JSON parsing errors and fall back to the generic message.
+		}
+
+		throw new Error(errorMessage);
+	});
 };
 
 export default function ContactFormV2({
@@ -26,7 +60,13 @@ export default function ContactFormV2({
 	toastMessage = "Thanks for reaching out!",
 	useCaptcha = false,
 	captchaSiteKey,
-	onSubmit,
+	toEmail,
+	apiPath = "/api/contact",
+	smtpHost,
+	smtpPort,
+	smtpUser,
+	smtpPass,
+	smtpSecure,
 }: ContactFormV2Props) {
 	const [formData, setFormData] = useState<FormData>({
 		name: "",
@@ -49,6 +89,9 @@ export default function ContactFormV2({
 
 	useEffect(() => {
 		setStartTime(Date.now());
+		if (!smtpHost || !smtpUser || !smtpPass) {
+			console.warn("ContactFormV2 is missing SMTP configuration props.");
+		}
 	}, []);
 
 	useEffect(() => {
@@ -101,6 +144,12 @@ export default function ContactFormV2({
 		const submissionData: ContactFormV2Submission = {
 			...formData,
 			message: safeMessage + `\n\nFrom: ${formData.email}`,
+			toEmail,
+			smtpHost,
+			smtpPort,
+			smtpUser,
+			smtpPass,
+			smtpSecure,
 			captchaToken: useCaptcha ? captchaToken : undefined,
 		};
 
@@ -108,16 +157,11 @@ export default function ContactFormV2({
 			console.warn("Captcha is enabled but no site key provided.");
 		}
 
-		if (!onSubmit) {
-			console.warn("ContactFormV2 requires an onSubmit handler when not using EmailJS.");
-			return;
-		}
-
 		setIsSubmitting(true);
 		setToast({ show: false });
 		setSubmissionError(null);
 
-		Promise.resolve(onSubmit(submissionData))
+		submitContactData(apiPath, submissionData)
 			.then(() => {
 				setToast({ show: true });
 				setFormData({
@@ -135,9 +179,13 @@ export default function ContactFormV2({
 				}
 				setTimeout(() => setToast({ show: false }), toastDuration);
 			})
-			.catch((error) => {
+			.catch((error: unknown) => {
 				console.error("ContactFormV2 submission error:", error);
-				setSubmissionError("Something went wrong. Please try again.");
+				const message =
+					error instanceof Error && error.message
+						? error.message
+						: "Something went wrong. Please try again.";
+				setSubmissionError(message);
 				setToast({ show: true });
 				setTimeout(() => setToast({ show: false }), toastDuration);
 			})
@@ -209,18 +257,14 @@ export default function ContactFormV2({
 					<ReCAPTCHA
 						sitekey={captchaSiteKey}
 						onChange={handleCaptchaChange}
-						ref={(instance) => {
+						ref={(instance: ReCAPTCHA | null) => {
 							captchaRef.current = instance;
 						}}
 					/>
-					{captchaError && (
-						<p className="cs-captcha-error">{captchaError}</p>
-					)}
+					{captchaError && <p className="cs-captcha-error">{captchaError}</p>}
 				</div>
 			)}
-			{submissionError && (
-				<p className="cs-error">{submissionError}</p>
-			)}
+			{submissionError && <p className="cs-error">{submissionError}</p>}
 			<button
 				className="cs-button-solid cs-submit"
 				type="submit"
