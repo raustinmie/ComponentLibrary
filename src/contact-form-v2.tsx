@@ -143,7 +143,7 @@ export default function ContactFormV2({
 
 		const submissionData: ContactFormV2Submission = {
 			...formData,
-			message: safeMessage + `\n\nFrom: ${formData.email}`,
+			message: safeMessage,
 			toEmail,
 			smtpHost,
 			smtpPort,
