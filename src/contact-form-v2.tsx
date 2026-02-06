@@ -28,7 +28,7 @@ export type ContactFormV2Submission = Omit<FormData, "message"> & {
 
 const submitContactData = (
 	apiPath: string,
-	payload: ContactFormV2Submission
+	payload: ContactFormV2Submission,
 ) => {
 	return fetch(apiPath, {
 		method: "POST",
@@ -89,21 +89,18 @@ export default function ContactFormV2({
 
 	useEffect(() => {
 		setStartTime(Date.now());
-		if (!smtpHost || !smtpUser || !smtpPass) {
-			console.warn("ContactFormV2 is missing SMTP configuration props.");
-		}
 	}, []);
 
 	useEffect(() => {
 		if (useCaptcha && !captchaSiteKey) {
 			console.warn(
-				"Captcha usage requires a site key. Provide NEXT_PUBLIC_RECAPTCHA_SITE_KEY via props."
+				"Captcha usage requires a site key. Provide NEXT_PUBLIC_RECAPTCHA_SITE_KEY via props.",
 			);
 		}
 	}, [useCaptcha, captchaSiteKey]);
 
 	const handleChange = (
-		e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+		e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
 	) => {
 		const { name, value } = e.target;
 		setFormData((prev) => ({ ...prev, [name]: value }));
@@ -138,7 +135,7 @@ export default function ContactFormV2({
 		const safeMessage =
 			formData.message.length > maxMessageLength
 				? formData.message.slice(0, maxMessageLength) +
-				  "\n\n[Message truncated]"
+					"\n\n[Message truncated]"
 				: formData.message;
 
 		const submissionData: ContactFormV2Submission = {
